@@ -48,11 +48,11 @@ class SampleListener(Leap.Listener):
 
                 if hand_roll < -20:
                     # turn left
-                    print "turning left"
+                    print "L"
 
                 if hand_roll > 20:
                     # turn right
-                    print "turning right"
+                    print "R"
 
             # Gestures
             for gesture in frame.gestures():
