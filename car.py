@@ -37,23 +37,22 @@ class SampleListener(Leap.Listener):
         frame = controller.frame()
 
         if not frame.hands.is_empty: 
-        	if frame.gestures().is_empty:
-	            hand = frame.hands[0]
+            if frame.gestures().is_empty:
+                hand = frame.hands[0]
 
-	            fingers = hand.fingers
-	            if not fingers.is_empty:
-	                pass
+                fingers = hand.fingers
+                if not fingers.is_empty:
+                    pass
 
-	            hand_roll = hand.palm_normal.roll * Leap.RAD_TO_DEG * -1
+                hand_roll = hand.palm_normal.roll * Leap.RAD_TO_DEG * -1
 
-	            if hand_roll < -20:
-	            	# turn left
-	            	print "turning left"
+                if hand_roll < -20:
+                    # turn left
+                    print "turning left"
 
-	            if hand_roll > 20:
-	            	# turn right
-	            	print "turning right"
-
+                if hand_roll > 20:
+                    # turn right
+                    print "turning right"
 
             # Gestures
             for gesture in frame.gestures():
