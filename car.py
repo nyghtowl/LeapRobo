@@ -7,17 +7,20 @@
 ################################################################################
 
 import Leap, sys
+import time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
 # https://forums.leapmotion.com/forum/support/community-support/os-x/3169-python-pythreadstate-get-no-current-thread
 
 
 class SampleListener(Leap.Listener):
+    time_last = 0
     def on_init(self, controller):
-        print "Initialized"
+        pass
+        #print ""
 
     def on_connect(self, controller):
-        print "Connected"
+        #print "Connected"
 
         # Enable gestures
         controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE);
@@ -26,11 +29,13 @@ class SampleListener(Leap.Listener):
         controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
 
     def on_disconnect(self, controller):
+        pass
         # Note: not dispatched when running in a debugger.
-        print "Disconnected"
+        #print "Disconnected"
 
     def on_exit(self, controller):
-        print "Exited"
+        pass
+        #print "Exited"
 
     def on_frame(self, controller):
         # Get the most recent frame and report some basic information
@@ -40,12 +45,26 @@ class SampleListener(Leap.Listener):
             if frame.gestures().is_empty:
                 hand = frame.hands[0]
 
+                time_current = time.time()
+                #print "time_curret / time_last " , time_current , self.time_last , (time_current-self.time_last)
+                if time_current - self.time_last < .5:
+                    return
+                self.time_last = time_current
+
                 fingers = hand.fingers
+                if fingers.is_empty:
+                    print "S"
+
+                if len(fingers) == 5:
+                    # turn backward
+                    print "B"
+                    return
+
                 if not fingers.is_empty:
-                    pass
+                    print "F"
 
                 hand_roll = hand.palm_normal.roll * Leap.RAD_TO_DEG * -1
-
+                
                 if hand_roll < -20:
                     # turn left
                     print "L"
@@ -54,23 +73,24 @@ class SampleListener(Leap.Listener):
                     # turn right
                     print "R"
 
+                return
             # Gestures
-            for gesture in frame.gestures():
-                if gesture.type == Leap.Gesture.TYPE_CIRCLE:
-                    circle = CircleGesture(gesture)
+            # for gesture in frame.gestures():
+            #     if gesture.type == Leap.Gesture.TYPE_CIRCLE:
+            #         circle = CircleGesture(gesture)
 
                     # Determine clock direction using the angle between the pointable and the circle normal
-                    if circle.pointable.direction.angle_to(circle.normal) <= Leap.PI/4:
-                        clockwiseness = "clockwise"
-                    else:
-                        clockwiseness = "counterclockwise"
+                    # if circle.pointable.direction.angle_to(circle.normal) <= Leap.PI/4:
+                    #     clockwiseness = "clockwise"
+                    # else:
+                    #     clockwiseness = "counterclockwise"
 
                     # Calculate the angle swept since the last frame
-                    swept_angle = 0
-                    if circle.state != Leap.Gesture.STATE_START:
-                        previous_update = CircleGesture(controller.frame(1).gesture(circle.id))
-                        swept_angle =  (circle.progress - previous_update.progress) * 2 * Leap.PI
-                        print swept_angle
+                    # swept_angle = 0
+                    # if circle.state != Leap.Gesture.STATE_START:
+                    #     previous_update = CircleGesture(controller.frame(1).gesture(circle.id))
+                    #     swept_angle =  (circle.progress - previous_update.progress) * 2 * Leap.PI
+                        #print swept_angle
 
 
     def state_string(self, state):
@@ -95,7 +115,7 @@ def main():
     controller.add_listener(listener)
 
     # Keep this process running until Enter is pressed
-    print "Press Enter to quit..."
+    #print "Press Enter to quit..."
     sys.stdin.readline()
 
     # Remove the sample listener when done
