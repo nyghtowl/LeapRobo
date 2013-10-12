@@ -62,7 +62,7 @@ void movesCarForward()                                 // Built in initializatio
   servoLeft.writeMicroseconds(1400);         // 1.7 ms -> counterclockwise
   servoRight.writeMicroseconds(1600);        // 1.3 ms -> clockwise
 }  											
-//moves car forward
+
 
 void movesCarBackward()                                 // Built in initialization block
 { 
@@ -83,55 +83,47 @@ void rightWheelBack()                                 // Built in initialization
   servoRight.writeMicroseconds(1500);        // 1.3 ms -> clockwise
 } 
 
-void loop()                                  // Main loop auto-repeats
+void loop()                                  // Main loop - seeks serial input and activates drive functions
 {
-  int drive_command = 0;
-  if (!Serial.available() ){
+  int drive_command = 0;                     // Default drive command to to 0
+  if (!Serial.available() ){                 // Car doesn't drive if serial not available
     //stopsCar();
   }
   else { 
-    drive_command = Serial.read();
+    drive_command = Serial.read();           // Reads serial input
     Serial.print("I received: ");
-    Serial.println(drive_command);
+    Serial.println(drive_command);           // Outputs ASCII value
   
-  switch (drive_command) {
-    case 'F':
+  switch (drive_command) {                   
+    case 'F':                                // Forward
     digitalWrite(8,LOW);
 digitalWrite(9,LOW);
         movesCarForward();
         //delay(1000);
         break;
-    case 'B':
+    case 'B':                                // Backward
     digitalWrite(8,HIGH);
 digitalWrite(9,HIGH);
         movesCarBackward();
         //delay(1000);
         break;
-    case 'L':
+    case 'L':                                 //Left
         carTurnsLeft();
         //delay(1100);
         break;
-    case 'R':
+    case 'R':                                // Right
         carTurnsRight();
         //delay(1100);
         break;
-    case 'l':
+    case 'l':                               // Shift left
         carShiftsLeft();
         //delay(500);
         break;
-    case 'r':
+    case 'r':                               // Shift right
         carShiftsRight();
         //delay(500);
         break;
-    case 'k':
-        leftWheelBack();
-        //delay(500);
-        break;
-    case 'e':
-        rightWheelBack();
-        //delay(500);
-        break;
-    case 'S':
+    case 'S':                               // Stop
         stopsCar();
         //delay(1000);
     default: 
