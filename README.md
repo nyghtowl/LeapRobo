@@ -20,3 +20,5 @@ Tech:
 - Python on Leap
 - C on Arduino
 - Passed values through serial port with the Leap and Arduino connected through USB
+
+CLI Activation:python car.py > /dev/tty.usbmodem1411
