@@ -1,0 +1,45 @@
+// agent code:
+server.log("Turn LED on: " + http.agenturl() + "?state=1");
+server.log("Turn LED off: " + http.agenturl() + "?state=0");
+
+function httpHandler(request, response) {
+    if ("drivecommand" in request.query) {
+        local drive_command = request.query.drivecommand;
+        device.send("command", drive_command);
+    }
+    response.send(200, "OK");
+}
+http.onrequest(httpHandler);
+
+imp.configure("test", [], [])
+// electric imp device code
+server.log("Device Started");
+ 
+arduino <- hardware.uart57;
+
+// collect charcters until we have a whole line then log it
+rx <- "";
+function arduinoData() {
+    local d = arduino.read();
+    while(d != -1) {
+        if (d >= 32) {
+            rx += d.tochar();
+        } else {
+            if (d == 10) {
+                server.log("rx: "+rx);
+                rx="";
+            }
+        }
+        d=arduino.read();
+    }
+}
+
+arduino.configure(9600, 8, PARITY_NONE, 1, NO_CTSRTS, arduinoData);
+
+imp.sleep(1);
+
+
+agent.on("command", function(command) {
+   server.log(command) 
+    arduino.write(command);
+});

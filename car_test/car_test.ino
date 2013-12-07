@@ -19,7 +19,7 @@ pinMode(9,OUTPUT);
 digitalWrite(8,LOW);
 digitalWrite(9,LOW);
 servoLeft.attach(13);
-	servoRight.attach(12);
+servoRight.attach(12);
 }
 
 void carShiftsRight()                                 // Built in initialization block
@@ -87,12 +87,10 @@ void loop()                                  // Main loop - seeks serial input a
 {
   int drive_command = 0;                     // Default drive command to to 0
   if (!Serial.available() ){                 // Car doesn't drive if serial not available
-    //stopsCar();
+//    stopsCar();
   }
   else { 
     drive_command = Serial.read();           // Reads serial input
-    Serial.print("I received: ");
-    Serial.println(drive_command);           // Outputs ASCII value
   
   switch (drive_command) {                   
     case 'F':                                // Forward
